@@ -1,0 +1,91 @@
+#!/bin/bash
+PROG=$(readlink -f "$0")
+BASE_DIR=$(dirname ${PROG})
+PID_FILE="${BASE_DIR}/pid.txt"
+OUT_FILE="${BASE_DIR}/stdout.log"
+
+# customize by your app
+DAEMIN="/usr/bin/python3.5"
+DAEMON_OPT="${BASE_DIR}/HelloWorld2.py"
+
+start() {
+    nohup ${DAEMIN} ${DAEMON_OPT} >>${OUT_FILE} 2>&1 &
+    pid=$!
+    [ -z "$pid" ] && return 1
+    echo $pid >$PID_FILE
+    return 0
+}
+
+stop() {
+    local ret_val=$(status) ret_code=$?
+    if [ -n "${ret_val}" ]; then
+        kill -9 ${ret_val}
+        ret_val=$?
+        rm -rf ${PID_FILE}
+        return ${ret_val}
+    fi
+    return 0
+}
+
+status() {
+    # return code:
+    ## 0: running 1: stopped 2: more than one process found
+    pid=$(get_pid)
+    if [ -z "$pid" ]; then
+        return 1
+    else
+        if [ $(grep -c . <<<"$pid") -gt 1 ]; then
+            echo "$pid"
+            return 2
+        else
+            echo $pid
+            return 0
+        fi
+    fi
+}
+
+get_pid() {
+    local pid=$(ps aux | grep "${DAEMON_OPT}" | grep -v grep | awk '{print $2}')
+    echo $pid
+}
+
+case "$1" in
+    start)
+        start
+        ret_code=$?
+        if [ ${ret_code} = 0 ]; then
+            echo "Started"
+        else
+            echo "Failed"
+        fi
+        exit ${ret_code}
+        ;;
+    stop)
+        stop
+        ret_code=$?
+        if [ ${ret_code} = 0 ]; then
+            echo "Stopped"
+        else
+            echo "Failed"
+        fi
+        exit ${ret_code}
+        ;;
+    status)
+        ret_val=$(status)
+        ret_code=$?
+        if [ ${ret_code} = 0 ]; then
+            echo "Running"
+        elif [ ${ret_code} = 1 ]; then
+            echo "Stopped"
+        elif [ ${ret_code} = 2 ]; then
+            echo "More than one process found: ${ret_val}"
+        fi
+        exit ${ret_code}
+        ;;
+    *)
+        echo "Usage: ${PROG} start|stop|status"
+        exit 1
+        ;;
+esac
+
+exit 0

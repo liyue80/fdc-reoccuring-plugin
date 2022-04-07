@@ -1,0 +1,34 @@
+#!/bin/bash
+PROG=$(readlink -f "$0")
+BASE_DIR=$(dirname ${PROG})
+plugin_name=$(basename $BASE_DIR)
+main_script="${BASE_DIR}/plugin_${plugin_name}"
+[ -z "$plugin_name" ] && { echo "Failed to get name of plugin";  exit 2; }
+
+# stop plugin
+if [ -f "$main_script" ]; then
+    bash $main_script stop
+fi
+# remove conf files
+if [ -d "/etc/$plugin_name" ]; then
+    rm -rvf /etc/$plugin_name
+fi
+# remove php controller/view
+if [ -d "$BASE_DIR/files/php" ]; then
+    if [ "$(ls -A $BASE_DIR/files/php)" ]; then
+        rm -rvf /var/www/html/ainvr/app/Http/Controllers/Plugins/$plugin_name
+        rm -rvf /var/www/html/ainvr/resources/views/plugins/$plugin_name
+        # remove php route
+        if [ -f "$BASE_DIR/php_route" ]; then
+            bash $BASE_DIR/php_route remove
+        fi
+    fi
+fi
+
+### customize ###
+
+# remove anything you installed
+
+### end customize ###
+
+exit 0

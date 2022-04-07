@@ -1,0 +1,80 @@
+#!/bin/bash
+
+## append/remove php route
+
+PROG=$(readlink -f "$0")
+BASE_DIR=$(dirname ${PROG})
+plugin_name=$(basename $BASE_DIR)
+php_route_conf="/var/www/html/ainvr/routes/plugin.php"
+plugin_route_conf="${BASE_DIR}/files/php/${plugin_name}Routes.txt"
+blade_php="/var/www/html/ainvr/resources/views/menu/pluginsDropdownModal.blade.php"
+modal="@include('plugins.${plugin_name}.${plugin_name}')"
+[ -f "$php_route_conf" ] || { echo "Can not find $php_route_conf"; exit 2; }
+[ -f "$plugin_route_conf" ] || { echo "Can not find $plugin_route_conf"; exit 2; }
+
+remove_route() {
+    remove_blank_lines "$plugin_route_conf"
+    first_l="$(head -n 1 $plugin_route_conf)"
+    last_l="$(tail -n 1 $plugin_route_conf)"
+    start=$(grep -m 1 -n -F "$first_l" "${php_route_conf}" | cut -d : -f 1)
+    if [ -z "$start" ]; then
+        echo "can not get start line"
+        return 1
+    fi
+    end=$(tail -n +${start} ${php_route_conf} | grep -m 1 -F -n "$last_l" | cut -d : -f 1)
+    if [ -z "$end" ]; then
+        echo "can not get end line"
+        return 1
+    fi
+    end=$((start + end - 1))
+    local sed_arg="${start},${end}d"
+    sed -e "$sed_arg" -i $php_route_conf
+}
+
+remove_blade_modal() {
+    line_num=$(grep -m 1 -n -F "$modal" "${blade_php}" | cut -d : -f 1)
+    if [ -n "$line_num" ]; then
+        sed -e "${line_num}d" -i ${blade_php}
+    fi
+}
+
+append_route() {
+    remove_route 2>/dev/null
+    cat "$plugin_route_conf" >>$php_route_conf
+    echo "" >>$php_route_conf
+}
+
+append_blade_modal() {
+    remove_blade_modal
+    echo "$modal" >>${blade_php}
+    echo "" >>${blade_php}
+}
+
+remove_blank_lines() {
+    if [ -f "$1" ]; then
+        sed -i '/^[[:blank:]]*$/ d' $1
+    fi
+}
+
+append() {
+    append_route
+    append_blade_modal
+}
+
+remove() {
+    remove_blade_modal
+    remove_route
+}
+
+if [ $# -eq 0 ]; then
+    echo "No arguments supplied"
+    exit 1
+fi
+if [ "$1" = "append" ]; then
+    append
+elif [ "$1" = "remove" ]; then
+    remove
+else
+    echo "Unknown argument"
+    exit 1
+fi

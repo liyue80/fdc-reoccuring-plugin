@@ -1,0 +1,37 @@
+#!/bin/bash
+# Please use the full path in this script
+PROG=$(readlink -f "$0")
+BASE_DIR=$(dirname ${PROG})
+plugin_name=$(basename $BASE_DIR)
+main_script="${BASE_DIR}/plugin_${plugin_name}"
+
+[ -z "$plugin_name" ] && { echo "Failed to get name of plugin";  exit 2; }
+[ ! -f "$main_script" ] && { echo "$main_script does not exist!"; exit 2; }
+
+# make entrypoint executable
+chmod +x $main_script
+# php view and controller
+if [ -d "$BASE_DIR/files/php" ]; then
+    if [ "$(ls -A $BASE_DIR/files/php)" ]; then
+        cp -rfv $BASE_DIR/files/php/Controllers/Plugins/* /var/www/html/ainvr/app/Http/Controllers/Plugins/
+        cp -rfv $BASE_DIR/files/php/views/plugins/* /var/www/html/ainvr/resources/views/plugins/
+        # append php route
+        if [ -f "$BASE_DIR/php_route" ]; then
+            bash $BASE_DIR/php_route append
+        fi
+    fi
+fi
+
+### Please cutomize the following lines if needed ###
+
+# install .deb files
+dpkg -i ${BASE_DIR}/files/dpkg/*.deb
+
+# copy configs
+mkdir -p /etc/$plugin_name
+cp -rfv $BASE_DIR/files/conf/* /etc/$plugin_name
+chmod 755 /etc/$plugin_name/*
+
+### end customize ###
+
+exit 0
