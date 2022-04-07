@@ -9,8 +9,42 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body" style="text-align: center; overflow: visible;">
-				<label id="user2Name" style="padding-top: 100px; font-size:50px;"></label>
+			<div class="modal-body" style="overflow: visible;">
+				<div class="container-md">
+					<div class="row">
+						<div class="col-md-8 offset-md-2">
+							<form>
+								<div class="form-group">
+									<label for="inputTimeWindow">Time Window</label>
+									<input type="number" class="form-control" id="inputTimeWindow" value="30">
+								</div>
+								<div class="form-group">
+									<label for="inputCountThreshold">Count Threshold</label>
+									<input type="number" class="form-control" id="inputCountThreshold" value="5">
+								</div>
+								<div class="form-group">
+									<label>Object Types</label>
+									<div id="objecttypes">
+										<!-- <div class="form-check custom-control-inline">
+                                <input type="checkbox" id="customRadioInline1" name="customRadioInline"
+                                    class="form-check-input">
+                                <label for="customRadioInline1">Car</label>
+                            </div>
+
+                            <div class="form-check custom-control-inline">
+                                <input type="checkbox" id="customRadioInline2" name="customRadioInline"
+                                    class="form-check-input">
+                                <label for="customRadioInline2">Bus</label>
+                            </div> -->
+
+									</div>
+								</div>
+								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="reset" class="btn btn-secondary">Reset</button>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -27,12 +61,25 @@
 			toastr.error('Lost Connection');
 		}
 	});
-
-
 	var filePath = '';
 	$(document).ready(function() {
+		//fillUser2Name();
+		createElementObjectTypes();
 
-		fillUser2Name();
+		function createElementObjectTypes() {
+			const types = ["animal", "backpack", "bag", "bicycle", "bus", "car",
+				"cell_phone", "cow", "dog", "fire", "forklift", "handgun",
+				"head", "human", "motorbike", "object", "others", "person", "rifle",
+				"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
+			]
+			types.forEach(function(element) {
+				let elementId = 'id_' + element
+				let div = $('<div class="form-check form-check-inline">')
+				$('<input type="checkbox" class="form-check-input" style="margin-left: 0">').prop('id', elementId).prop('name', elementId).appendTo(div)
+				$('<label class="form-check-label" style="text-transform: capitalize;"></label>').prop('for', elementId).text(element).appendTo(div)
+				div.appendTo($('#objecttypes'))
+			})
+		}
 
 		function fillUser2Name() {
 			var success = false;
