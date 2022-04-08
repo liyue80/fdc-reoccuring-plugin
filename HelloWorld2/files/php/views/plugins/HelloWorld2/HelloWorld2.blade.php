@@ -67,15 +67,15 @@
 
 		// GET all supported object types and show them.
 		$.ajax({
-				url: '{{ url("/helloWorld2/getObjectTypes") }}',
-				type: 'GET',
-				cache: false,
-				success: function(data) {
-					createElementObjectTypes(data);
-				},
-				// error: function(jqXHR, textStatus, errorThrown) {
-				// },
-			});
+			url: '{{ url("/helloWorld2/getObjectTypes") }}',
+			type: 'GET',
+			cache: false,
+			success: function(data) {
+				createElementObjectTypes(data);
+			},
+			// error: function(jqXHR, textStatus, errorThrown) {
+			// },
+		});
 
 
 		function createElementObjectTypes(types) {
@@ -84,12 +84,15 @@
 			// 	"head", "human", "motorbike", "object", "others", "person", "rifle",
 			// 	"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
 			// ]
+			const exclusions = ["animal", "human", "object", "others", "transportation"];
 			types.forEach(function(element) {
-				let elementId = 'ot_' + element
-				let div = $('<div class="form-check form-check-inline">')
-				$('<input type="checkbox" class="form-check-input" style="margin-left: 0">').prop('id', elementId).prop('name', elementId).appendTo(div)
-				$('<label class="form-check-label" style="text-transform: capitalize;"></label>').prop('for', elementId).text(element).appendTo(div)
-				div.appendTo($('#objecttypes'))
+				if (exclusions.indexOf(element) < 0) {
+					let elementId = 'ot_' + element;
+					let div = $('<div class="form-check form-check-inline">');
+					$('<input type="checkbox" class="form-check-input" style="margin-left: 0">').prop('id', elementId).prop('name', elementId).appendTo(div);
+					$('<label class="form-check-label" style="text-transform: capitalize;"></label>').prop('for', elementId).text(element).appendTo(div);
+					div.appendTo($('#objecttypes'));
+				}
 			})
 		}
 
@@ -105,11 +108,9 @@
 				processData: false,
 				contentType: false,
 				success: function(data) {
-					console.log(data);
 					$('#user2Name').text('Hello!!! ' + data.toUpperCase());
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					console.log(errorThrown);
 				},
 			});
 		};
