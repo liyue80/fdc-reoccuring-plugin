@@ -30,4 +30,20 @@ class HelloWorld2 extends Controller
 
 		return $userName;
 	}
+
+	public function getObjectTypes(Request $request)
+	{
+		$response = Curl::to($this->apiUrl . "/ainvr/api/types")
+			->withHeader('x-auth-token:' . $this->token)
+			->withOption('SSL_VERIFYHOST', false)
+			->returnResponseObject()
+			->get();
+
+		if ($response->status != 200) {
+			$libs = new CommonLib();
+			return $libs->handelHttpReturnMessage($response->content);
+		}
+
+		return json_decode($response->content);
+	}
 }

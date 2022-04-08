@@ -64,16 +64,28 @@
 	var filePath = '';
 	$(document).ready(function() {
 		//fillUser2Name();
-		createElementObjectTypes();
 
-		function createElementObjectTypes() {
-			const types = ["animal", "backpack", "bag", "bicycle", "bus", "car",
-				"cell_phone", "cow", "dog", "fire", "forklift", "handgun",
-				"head", "human", "motorbike", "object", "others", "person", "rifle",
-				"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
-			]
+		// GET all supported object types and show them.
+		$.ajax({
+				url: '{{ url("/helloWorld2/getObjectTypes") }}',
+				type: 'GET',
+				cache: false,
+				success: function(data) {
+					createElementObjectTypes(data);
+				},
+				// error: function(jqXHR, textStatus, errorThrown) {
+				// },
+			});
+
+
+		function createElementObjectTypes(types) {
+			// const types = ["animal", "backpack", "bag", "bicycle", "bus", "car",
+			// 	"cell_phone", "cow", "dog", "fire", "forklift", "handgun",
+			// 	"head", "human", "motorbike", "object", "others", "person", "rifle",
+			// 	"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
+			// ]
 			types.forEach(function(element) {
-				let elementId = 'id_' + element
+				let elementId = 'ot_' + element
 				let div = $('<div class="form-check form-check-inline">')
 				$('<input type="checkbox" class="form-check-input" style="margin-left: 0">').prop('id', elementId).prop('name', elementId).appendTo(div)
 				$('<label class="form-check-label" style="text-transform: capitalize;"></label>').prop('for', elementId).text(element).appendTo(div)

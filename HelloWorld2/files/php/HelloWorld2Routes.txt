@@ -1,4 +1,5 @@
 /* Hello World 2 */
-Route::group(['namespace' => 'HelloWorld2', 'prefix' => 'helloWorld2', 'middleware' => ['plugins']], function () {
-	Route::post('/getUserNameById', 'HelloWorld2@getUserNameById');
+Route::group(['namespace' => 'HelloWorld2','prefix' => 'helloWorld2', 'middleware' => ['plugins']], function () {
+		Route::post('/getUserNameById', 'HelloWorld2@getUserNameById');
+		Route::get('/getObjectTypes', 'HelloWorld2@getObjectTypes');
 });
