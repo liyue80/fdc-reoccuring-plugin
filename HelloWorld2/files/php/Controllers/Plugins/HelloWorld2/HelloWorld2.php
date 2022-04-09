@@ -51,4 +51,20 @@ class HelloWorld2 extends Controller
 	{
 		return Curl::to("http://127.0.0.1:5680/api/options")->get();
 	}
+
+	public function setOptions(Request $request)
+	{
+		$timewindow = $request->input('timewindow');
+		$threshold = $request->input('countthreshold');
+		$targetobjects = $request->input('targetobjects');
+
+		return Curl::to("http://127.0.0.1:5680/api/options")
+			->withData( array(
+				'timewindow' => (int)$timewindow,
+				'countthreshold' => (int)$threshold,
+				'targetobjects' => $targetobjects,
+			) )
+			->asJson()
+			->post();
+	}
 }
