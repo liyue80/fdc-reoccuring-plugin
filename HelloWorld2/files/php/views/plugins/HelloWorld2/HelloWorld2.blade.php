@@ -65,6 +65,19 @@
 	$(document).ready(function() {
 		//fillUser2Name();
 
+		$.ajax({
+			url: '{{ url("/helloWorld2/getOptions") }}',
+			type: 'GET',
+			cache: false,
+			success: function (data) {
+				console.log('=======');
+				console.log(data);
+			},
+			error: function(jqXHR) {
+				console.log("getOptions error");
+			},
+		});
+
 		// GET all supported object types and show them.
 		$.ajax({
 			url: '{{ url("/helloWorld2/getObjectTypes") }}',

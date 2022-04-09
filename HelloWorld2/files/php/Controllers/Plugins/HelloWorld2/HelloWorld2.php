@@ -46,4 +46,9 @@ class HelloWorld2 extends Controller
 
 		return json_decode($response->content);
 	}
+
+	public function getOptions(Request $request)
+	{
+		return Curl::to("http://127.0.0.1:5680/api/options")->get();
+	}
 }
