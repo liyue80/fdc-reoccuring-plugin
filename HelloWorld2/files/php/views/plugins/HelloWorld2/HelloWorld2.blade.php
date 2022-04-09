@@ -4,23 +4,23 @@
 	<div class="modal-dialog ask-dialog" style="max-width: 90%; height: 85%">
 		<div class="modal-content" style="height:100%;overflow: visible;">
 			<div class="modal-header">
-				<h5 class="modal-title" id="modalLabel">Hello World 2</h5>
+				<h5 class="modal-title" id="modalLabel">Options</h5>
 				<button type="button" class="close push-xs-right form-control input-sm" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body" style="overflow: visible;">
-				<div class="container-md">
+				<div class="container-md" style="margin-top: 20px;">
 					<div class="row">
 						<div class="col-md-8 offset-md-2">
 							<form>
 								<div class="form-group">
-									<label for="inputTimeWindow">Time Window</label>
-									<input type="number" class="form-control" id="inputTimeWindow" value="30">
+									<label for="inputTimeWindow">Time Window(in seconds)</label>
+									<input type="number" class="form-control" id="inputTimeWindow" value="999">
 								</div>
 								<div class="form-group">
 									<label for="inputCountThreshold">Count Threshold</label>
-									<input type="number" class="form-control" id="inputCountThreshold" value="5">
+									<input type="number" class="form-control" id="inputCountThreshold" value="999">
 								</div>
 								<div class="form-group">
 									<label>Object Types</label>
@@ -65,47 +65,70 @@
 	$(document).ready(function() {
 		//fillUser2Name();
 
-		$.ajax({
-			url: '{{ url("/helloWorld2/getOptions") }}',
-			type: 'GET',
-			cache: false,
-			success: function (data) {
-				console.log('=======');
-				console.log(data);
-			},
-			error: function(jqXHR) {
-				console.log("getOptions error");
-			},
-		});
+		addCheckboxes().then(() => {
+			getAndUpdateOptions();
+		})
 
-		// GET all supported object types and show them.
-		$.ajax({
-			url: '{{ url("/helloWorld2/getObjectTypes") }}',
-			type: 'GET',
-			cache: false,
-			success: function(data) {
-				createElementObjectTypes(data);
-			},
-			// error: function(jqXHR, textStatus, errorThrown) {
-			// },
-		});
+		// query current options from the reoccuring service.
+		// and update data to GUI
+		function getAndUpdateOptions() {
+			$.ajax({
+				url: '{{ url("/helloWorld2/getOptions") }}',
+				type: 'GET',
+				cache: false,
+				dataType: 'json',
+				success: function(data) {
+					$("#inputTimeWindow").val(data.timewindow);
+					$("#inputCountThreshold").val(data.countthreshold);
+					data.targetobjects.split(',').forEach((e) => {
+						let selector = '#ot_' + e;
+						$(selector).prop("checked", true);
+					})
+				},
+				error: function(jqXHR) {
+					console.log("getOptions error");
+				},
+			});
+		}
 
-
-		function createElementObjectTypes(types) {
-			// const types = ["animal", "backpack", "bag", "bicycle", "bus", "car",
-			// 	"cell_phone", "cow", "dog", "fire", "forklift", "handgun",
-			// 	"head", "human", "motorbike", "object", "others", "person", "rifle",
-			// 	"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
-			// ]
-			const exclusions = ["animal", "human", "object", "others", "transportation"];
-			types.forEach(function(element) {
-				if (exclusions.indexOf(element) < 0) {
-					let elementId = 'ot_' + element;
-					let div = $('<div class="form-check form-check-inline">');
-					$('<input type="checkbox" class="form-check-input" style="margin-left: 0">').prop('id', elementId).prop('name', elementId).appendTo(div);
-					$('<label class="form-check-label" style="text-transform: capitalize;"></label>').prop('for', elementId).text(element).appendTo(div);
-					div.appendTo($('#objecttypes'));
-				}
+		// GET all supported object types
+		// and show their check boxes
+		function addCheckboxes() {
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					url: '{{ url("/helloWorld2/getObjectTypes") }}',
+					type: 'GET',
+					cache: false,
+					dataType: 'json',
+					success: function(data) {
+						// const data = ["animal", "backpack", "bag", "bicycle", "bus", "car",
+						// 	"cell_phone", "cow", "dog", "fire", "forklift", "handgun",
+						// 	"head", "human", "motorbike", "object", "others", "person", "rifle",
+						// 	"smoke", "stroller", "transportation", "truck", "umbrella", "wheelchair"
+						// ]
+						const exclusions = ["animal", "human", "object", "others", "transportation"];
+						data.forEach(function(element) {
+							if (exclusions.indexOf(element) < 0) {
+								let elementId = 'ot_' + element;
+								let div = $('<div class="form-check form-check-inline">');
+								$('<input type="checkbox" class="form-check-input" style="margin-left: 0">')
+									.prop('id', elementId)
+									.prop('name', elementId)
+									.appendTo(div);
+								$('<label class="form-check-label" style="text-transform: capitalize;"></label>')
+									.prop('for', elementId)
+									.text(element)
+									.appendTo(div);
+								div.appendTo($('#objecttypes'));
+							}
+						})
+						resolve(data)
+					},
+					error: function(error) {
+						console.log("getObjectTypes error")
+						reject(error)
+					},
+				})
 			})
 		}
 
@@ -123,8 +146,7 @@
 				success: function(data) {
 					$('#user2Name').text('Hello!!! ' + data.toUpperCase());
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
-				},
+				error: function(jqXHR, textStatus, errorThrown) {},
 			});
 		};
 
