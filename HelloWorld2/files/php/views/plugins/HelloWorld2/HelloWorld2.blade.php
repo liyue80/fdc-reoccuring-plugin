@@ -13,14 +13,14 @@
 				<div class="container-md" style="margin-top: 20px;">
 					<div class="row">
 						<div class="col-md-8 offset-md-2">
-							<form>
+							<form id="formfdc">
 								<div class="form-group">
-									<label for="inputTimeWindow">Time Window(in seconds)</label>
-									<input type="number" class="form-control" id="inputTimeWindow" value="999">
+									<label for="inputTimeWindow">Time Window(in minutes)</label>
+									<input type="number" class="form-control" id="inputTimeWindow" min="1" max="43200" value="30">
 								</div>
 								<div class="form-group">
 									<label for="inputCountThreshold">Count Threshold</label>
-									<input type="number" class="form-control" id="inputCountThreshold" value="999">
+									<input type="number" class="form-control" id="inputCountThreshold" min="1" max="9999" value="1">
 								</div>
 								<div class="form-group">
 									<label>Object Types</label>
@@ -39,7 +39,7 @@
 
 									</div>
 								</div>
-								<button type="submit" class="btn btn-primary">Submit</button>
+								<button type="button" class="btn btn-primary" id="submitfdcopt">Submit</button>
 							</form>
 						</div>
 					</div>
@@ -67,6 +67,32 @@
 		addCheckboxes().then(() => {
 			getAndUpdateOptions();
 		})
+
+		$("#submitfdcopt").on("click", () => {
+
+			let timeWindowValue = $("#inputTimeWindow").val().trim();
+			if (!/^\d+$/.test(timeWindowValue)) return false;
+			let twv = parseInt(timeWindowValue);
+			if (!twv) return false;
+
+			let thresholdValue = $("#inputCountThreshold").val().trim();
+			if (!/^\d+$/.test(thresholdValue)) return false;
+			let ctv = parseInt(thresholdValue);
+			if (!ctv) return false;
+
+			let typelist = []
+			$("#formfdc input[type=checkbox]:checked").each(function() {
+				typelist.push($(this).prop('id').substr(3));
+			});
+
+			console.log(typeof timeWindowValue, typeof thresholdValue)
+			console.log(timeWindowValue, thresholdValue)
+			console.log(typelist.join(","))
+			// $.ajax({
+			// 	url: '{{ url("/helloWorld2/setOptions") }}',
+			// })
+			// $("#HelloWorld2Dialog").modal("hide");
+		});
 
 		// query current options from the reoccuring service.
 		// and update data to GUI
@@ -130,6 +156,7 @@
 				})
 			})
 		}
+
 
 		function fillUser2Name() {
 			var success = false;
