@@ -71,13 +71,11 @@ class HelloWorld2 extends Controller
 			->put();
 
 		if ($response->status != 200) {
-			return json_encode(array('err' => $response->status));
+			$libs = new CommonLib();
+			return $libs->handelHttpReturnMessage($response->content);
 		}
-		// if ($response->status != 200) {
-		// 	return json_encode($response);
-		// }
 
-		//return $response->content;
 		return json_encode($response->content);
+		// return response()->json(['hello' => 'value'], 201);
 	}
 }
