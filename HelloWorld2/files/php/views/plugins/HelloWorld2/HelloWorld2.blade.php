@@ -85,12 +85,29 @@
 				typelist.push($(this).prop('id').substr(3));
 			});
 
-			console.log(typeof timeWindowValue, typeof thresholdValue)
-			console.log(timeWindowValue, thresholdValue)
-			console.log(typelist.join(","))
-			// $.ajax({
-			// 	url: '{{ url("/helloWorld2/setOptions") }}',
-			// })
+			// console.log(typeof timeWindowValue, typeof thresholdValue)
+			// console.log(timeWindowValue, thresholdValue)
+			// console.log(typelist)
+
+			$.ajax({
+				url: '{{ url("/helloWorld2/setOptions") }}',
+				type: 'PUT',
+				dataType: 'json',
+				cache: false,
+				contentType: 'application/json',
+				data: JSON.stringify({
+					timewindow: twv * 60,
+					countthreshold: ctv,
+					targetobjects: typelist
+				}),
+				processData: false,
+				success: function(data, textStatus, jQxhr) {
+					console.log(data);
+				},
+				error: function(jqXhr, textStatus, errorThrown) {
+					console.log(errorThrown);
+				}
+			});
 			// $("#HelloWorld2Dialog").modal("hide");
 		});
 
@@ -103,9 +120,9 @@
 				cache: false,
 				dataType: 'json',
 				success: function(data) {
-					$("#inputTimeWindow").val(data.timewindow);
+					$("#inputTimeWindow").val(Math.round(data.timewindow / 60));
 					$("#inputCountThreshold").val(data.countthreshold);
-					data.targetobjects.split(',').forEach((e) => {
+					data.targetobjects.forEach((e) => {
 						let selector = '#ot_' + e;
 						$(selector).prop("checked", true);
 					})

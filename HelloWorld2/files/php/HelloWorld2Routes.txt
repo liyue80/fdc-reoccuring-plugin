@@ -3,5 +3,5 @@ Route::group(['namespace' => 'HelloWorld2','prefix' => 'helloWorld2', 'middlewar
 		Route::post('/getUserNameById', 'HelloWorld2@getUserNameById');
 		Route::get('/getObjectTypes', 'HelloWorld2@getObjectTypes');
 		Route::get('/getOptions', 'HelloWorld2@getOptions');
-		Route::post('/setOptions', 'HelloWorld2@setOptions');
+		Route::put('/setOptions', 'HelloWorld2@setOptions');
 });
