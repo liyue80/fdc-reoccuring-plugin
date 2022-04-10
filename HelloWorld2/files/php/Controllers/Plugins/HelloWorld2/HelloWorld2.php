@@ -59,7 +59,7 @@ class HelloWorld2 extends Controller
 		// 	"result" => $request->isJson(),
 		// 	"contentin" => $request->getContent()
 		// );
-		
+
 		// $timewindow = $request->input('timewindow');
 		// $threshold = $request->input('countthreshold');
 		// // $targetobjects = $request->input('targetobjects');
@@ -67,7 +67,17 @@ class HelloWorld2 extends Controller
 		$response = Curl::to("http://127.0.0.1:5680/api/options")
 			->withData($data)
 			->asJson()
+			->returnResponseObject()
 			->put();
-		return $response;
+
+		if ($response->status != 200) {
+			return json_encode(array('err' => $response->status));
+		}
+		// if ($response->status != 200) {
+		// 	return json_encode($response);
+		// }
+
+		//return $response->content;
+		return json_encode($response->content);
 	}
 }
