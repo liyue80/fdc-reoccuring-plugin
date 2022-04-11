@@ -4,7 +4,7 @@
 	<div class="modal-dialog ask-dialog" style="max-width: 90%; height: 85%">
 		<div class="modal-content" style="height:100%;overflow: visible;">
 			<div class="modal-header">
-				<h5 class="modal-title" id="modalLabel">Options</h5>
+				<h5 class="modal-title" id="modalLabel">Reoccuring Config Dialog</h5>
 				<button type="button" class="close push-xs-right form-control input-sm" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
