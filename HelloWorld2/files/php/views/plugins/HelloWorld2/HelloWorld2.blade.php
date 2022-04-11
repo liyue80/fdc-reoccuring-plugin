@@ -1,6 +1,6 @@
 <style>
 </style>
-<div class="modal fade" id="HelloWorld2Dialog" tabindex="-1" role="dialog" style="width:95%; height:95%;" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static">
+<div class="modal fade" id="ReoccuringConfigDialog" tabindex="-1" role="dialog" style="width:95%; height:95%;" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static">
 	<div class="modal-dialog ask-dialog" style="max-width: 90%; height: 85%">
 		<div class="modal-content" style="height:100%;overflow: visible;">
 			<div class="modal-header">
@@ -90,7 +90,7 @@
 			// console.log(typelist)
 
 			$.ajax({
-				url: '{{ url("/helloWorld2/setOptions") }}',
+				url: '{{ url("/reoccuringConfig/setOptions") }}',
 				type: 'PUT',
 				dataType: 'json',
 				cache: false,
@@ -108,14 +108,14 @@
 					console.log(errorThrown);
 				}
 			});
-			// $("#HelloWorld2Dialog").modal("hide");
+			// $("#ReoccuringConfigDialog").modal("hide");
 		});
 
 		// query current options from the reoccuring service.
 		// and update data to GUI
 		function getAndUpdateOptions() {
 			$.ajax({
-				url: '{{ url("/helloWorld2/getOptions") }}',
+				url: '{{ url("/reoccuringConfig/getOptions") }}',
 				type: 'GET',
 				cache: false,
 				dataType: 'json',
@@ -138,7 +138,7 @@
 		function addCheckboxes() {
 			return new Promise((resolve, reject) => {
 				$.ajax({
-					url: '{{ url("/helloWorld2/getObjectTypes") }}',
+					url: '{{ url("/reoccuringConfig/getObjectTypes") }}',
 					type: 'GET',
 					cache: false,
 					dataType: 'json',
@@ -174,13 +174,12 @@
 			})
 		}
 
-
 		function fillUser2Name() {
 			var success = false;
 			var formData = new FormData();
 			formData.append('accountId', 2);
 			$.ajax({
-				url: '{{ url("/helloWorld2/getUserNameById") }}',
+				url: '{{ url("/reoccuringConfig/getUserNameById") }}',
 				type: 'POST',
 				cache: false,
 				data: formData,

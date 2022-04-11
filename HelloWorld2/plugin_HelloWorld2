@@ -6,7 +6,7 @@ OUT_FILE="${BASE_DIR}/stdout.log"
 
 # customize by your app
 DAEMIN="/usr/bin/python3.5"
-DAEMON_OPT="${BASE_DIR}/HelloWorld2.py"
+DAEMON_OPT="${BASE_DIR}/ReoccuringConfig.py"
 
 start() {
     nohup ${DAEMIN} ${DAEMON_OPT} >>${OUT_FILE} 2>&1 &

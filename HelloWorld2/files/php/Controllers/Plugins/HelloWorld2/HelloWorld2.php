@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Plugins\HelloWorld2;
+namespace App\Http\Controllers\Plugins\ReoccuringConfig;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Log;
 
-class HelloWorld2 extends Controller
+class ReoccuringConfig extends Controller
 {
 
 	public function getUserNameById(Request $request)
