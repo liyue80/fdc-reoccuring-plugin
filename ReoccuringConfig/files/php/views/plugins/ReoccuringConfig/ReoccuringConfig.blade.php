@@ -1,4 +1,8 @@
 <style>
+	.ac-fixed-width {
+		width: 90px;
+		margin-left: 0.75rem;
+	}
 </style>
 <div class="modal fade" id="ReoccuringConfigDialog" tabindex="-1" role="dialog" style="width:95%; height:95%;" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static">
 	<div class="modal-dialog ask-dialog" style="max-width: 90%; height: 85%">
@@ -24,22 +28,9 @@
 								</div>
 								<div class="form-group">
 									<label>Object Types</label>
-									<div id="objecttypes">
-										<!-- <div class="form-check custom-control-inline">
-                                <input type="checkbox" id="customRadioInline1" name="customRadioInline"
-                                    class="form-check-input">
-                                <label for="customRadioInline1">Car</label>
-                            </div>
-
-                            <div class="form-check custom-control-inline">
-                                <input type="checkbox" id="customRadioInline2" name="customRadioInline"
-                                    class="form-check-input">
-                                <label for="customRadioInline2">Bus</label>
-                            </div> -->
-
-									</div>
+									<div id="objecttypes"></div>
 								</div>
-								<button type="button" class="btn btn-primary" id="submitfdcopt">Submit</button>
+								<button type="button" class="btn btn-primary" id="submitfdcopt">Save</button>
 							</form>
 						</div>
 					</div>
@@ -152,7 +143,7 @@
 						data.forEach(function(element) {
 							if (exclusions.indexOf(element) < 0) {
 								let elementId = 'ot_' + element;
-								let div = $('<div class="form-check form-check-inline">');
+								let div = $('<div class="form-check form-check-inline ac-fixed-width">');
 								$('<input type="checkbox" class="form-check-input" style="margin-left: 0">')
 									.prop('id', elementId)
 									.prop('name', elementId)
