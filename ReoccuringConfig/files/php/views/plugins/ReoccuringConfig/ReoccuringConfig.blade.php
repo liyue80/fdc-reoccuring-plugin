@@ -94,7 +94,7 @@
 				processData: false,
 				success: function(data, textStatus, jQxhr) {
 					console.log(data);
-					showAlert('All right. The configuration was saved.', 'alert-primary');
+					showAlert('All right. The configuration was saved.', 'alert-success');
 				},
 				error: function(jqXhr, textStatus, errorThrown) {
 					console.log(errorThrown);
