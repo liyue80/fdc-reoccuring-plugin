@@ -17,7 +17,7 @@
 				<div class="container-md" style="margin-top: 20px;">
 					<div class="row">
 						<div class="col-md-8 offset-md-2">
-							<form id="formfdc">
+							<form id="formfdc" style="margin-bottom: 5px;">
 								<div class="form-group">
 									<label for="inputTimeWindow">Time Window(in minutes)</label>
 									<input type="number" class="form-control" id="inputTimeWindow" min="1" max="43200" value="30">
@@ -30,7 +30,7 @@
 									<label>Object Types</label>
 									<div id="objecttypes"></div>
 								</div>
-								<button type="button" class="btn btn-primary" id="submitfdcopt">Save</button>
+								<button type="button" class="btn confirmBtn" id="submitfdcopt"><img ok="">Apply</button>
 							</form>
 						</div>
 					</div>
@@ -94,13 +94,24 @@
 				processData: false,
 				success: function(data, textStatus, jQxhr) {
 					console.log(data);
+					showAlert('All right. The configuration was saved.', 'alert-primary');
 				},
 				error: function(jqXhr, textStatus, errorThrown) {
 					console.log(errorThrown);
+					showAlert('Oops there was an error while saving configuration!.', 'alert-danger');
 				}
 			});
 			// $("#ReoccuringConfigDialog").modal("hide");
 		});
+
+		function showAlert(message, color) {
+			$('#alertfdc').remove(); // close previous alert if exists
+			let alertDiv = $('<div id="alertfdc" class="alert" role="alert">').addClass(color);
+			$('<span>').text(message).appendTo(alertDiv);
+			let alertBtn = $('<button type="button" class="close" data-dismiss="alert" aria-label="Close">').appendTo(alertDiv);
+			$('<span aria-hidden="true">').text('x').appendTo(alertBtn);
+			alertDiv.insertAfter('#formfdc');
+		}
 
 		// query current options from the reoccuring service.
 		// and update data to GUI
@@ -120,6 +131,7 @@
 				},
 				error: function(jqXHR) {
 					console.log("getOptions error");
+					showAlert('Oops there was an error while loading configuration.', 'alert-danger');
 				},
 			});
 		}
